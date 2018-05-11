@@ -8,6 +8,7 @@ package br.edu.unilasalle.aulahoje.controller;
 import br.edu.unilasalle.aulahoje.model.TarefaDAO;
 import br.edu.unilasalle.aulahoje.model.Tarefa;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.List;
 import javax.management.RuntimeErrorException;
 import org.springframework.stereotype.Controller;
@@ -31,15 +32,15 @@ public class TarefasController {
             throw new RuntimeException(exception);
         }
     }
-    
+
     @RequestMapping("novaTarefa")
-    public String form() {        
+    public String form() {
         return "tarefa/formulario";
     }
-    
+
     @RequestMapping("listaTarefa")
-    public String lista(Model model) throws ClassCastException, SQLException {
-        TarefaDAO dao = new TarefaDAO();        
+    public String lista(Model model) {
+        TarefaDAO dao = new TarefaDAO();
         try {
             List<Tarefa> tarefas = dao.lista();
             model.addAttribute("tarefas", tarefas);
@@ -47,13 +48,11 @@ public class TarefasController {
         } catch (ClassNotFoundException | SQLException exception) {
             throw new RuntimeException(exception);
         }
-        
+
     }
-    
+
     @RequestMapping("removeTarefa")
-    public String remove(Tarefa tarefa) 
-        throws SQLException, ClassNotFoundException
-    { 
+    public String remove(Tarefa tarefa) {
         TarefaDAO dao = new TarefaDAO();
         try {
             dao.remove(tarefa);
@@ -62,4 +61,27 @@ public class TarefasController {
             throw new RuntimeException(exception);
         }
     }
+
+    @RequestMapping("mostraTarefa")
+    public String mostra(Long id, Model model) {
+        TarefaDAO dao = new TarefaDAO();
+        try {
+            model.addAttribute("tarefa", dao.buscaPorId(id));
+            return "tarefa/mostra";
+        } catch (SQLException | ClassNotFoundException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
+    @RequestMapping("alteraTarefa")
+    public String altera(Tarefa tarefa) {
+        TarefaDAO dao = new TarefaDAO();
+        try {
+            dao.altera(tarefa);
+            return "redirect:listaTarefas";
+        } catch (SQLException | ClassNotFoundException | ParseException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
 }

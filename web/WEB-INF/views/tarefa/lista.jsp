@@ -43,6 +43,7 @@
                         </td>
                         <td>
                             <a href="removeTarefa?id=${tarefa.id}">remover</a>
+                            <a href="mostraTarefa?id=${tarefa.id}">alterar</a>
                         </td>
                     </tr>
                 </c:forEach>
